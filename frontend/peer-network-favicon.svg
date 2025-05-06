@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="16" cy="16" r="16" fill="#07092F"/>
+  
+  <!-- Three Colored Dots in a Row -->
+  <circle cx="10" cy="16" r="3" fill="#14F1D9"/>
+  <circle cx="16" cy="16" r="3" fill="#3672F8"/>
+  <circle cx="22" cy="16" r="3" fill="#EC6EAD"/>
+  
+  <!-- Connection Lines Between Dots -->
+  <line x1="10" y1="16" x2="16" y2="16" stroke="#14F1D9" stroke-width="1.5" stroke-opacity="0.6"/>
+  <line x1="16" y1="16" x2="22" y2="16" stroke="#3672F8" stroke-width="1.5" stroke-opacity="0.6"/>
+</svg>
