@@ -76,7 +76,7 @@ const UserReviewsPage = () => {
         setUserError(null);
 
         const response = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/users/${userId}`,
+          `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/${userId}`,
           { credentials: 'include' }
         );
         

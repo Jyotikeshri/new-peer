@@ -36,7 +36,7 @@ const useReviewStore = create((set, get) => ({
     try {
       set({ isLoading: true, error: null });
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/reviews`,
+        `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/reviews`,
         { credentials: 'include' }
       );
       
@@ -84,7 +84,7 @@ const useReviewStore = create((set, get) => ({
       }
       
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/reviews/${userId}`,
+        `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/reviews/${userId}`,
         { credentials: 'include' }
       );
       
@@ -136,7 +136,7 @@ const useReviewStore = create((set, get) => ({
       }
       
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/reviews`,
+        `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/reviews`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -181,7 +181,7 @@ const useReviewStore = create((set, get) => ({
       // Method 1: Check using the direct API endpoint
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/reviews/check/${revieweeId}`,
+          `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/reviews/check/${revieweeId}`,
           { credentials: 'include' }
         );
         

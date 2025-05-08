@@ -20,7 +20,7 @@ const useAuthStore = create(
         try {
           set({ isLoading: true, error: null });
           
-          const response = await fetch('http://localhost:8000/api/auth/login', {
+          const response = await fetch('https://new-peer-1.onrender.com/api/auth/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ const useAuthStore = create(
         try {
           set({ isLoading: true, error: null });
 
-          const response = await fetch('http://localhost:8000/api/auth/register', {
+          const response = await fetch('https://new-peer-1.onrender.com/api/auth/register', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ const useAuthStore = create(
         try {
           set({ isLoading: true });
 
-          await fetch('http://localhost:8000/api/auth/logout', {
+          await fetch('https://new-peer-1.onrender.com/api/auth/logout', {
             method: 'POST',
             credentials: 'include',
           });
@@ -153,7 +153,7 @@ const useAuthStore = create(
         try {
           set({ isLoading: true });
 
-          const response = await fetch('http://localhost:8000/api/users/profile', {
+          const response = await fetch('https://new-peer-1.onrender.com/api/users/profile', {
             credentials: 'include',
             headers: {
               // Try to send token if we have it in the store
