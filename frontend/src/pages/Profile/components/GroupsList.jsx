@@ -21,6 +21,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import toast from 'react-hot-toast';
 import useUserStore from '../../../contexts/userStore';
+import { fetchWithAuth } from '../../../utils/apiClient';
 
 /**
  * GroupsList uses the Stream Chat client to fetch and display group channels.
@@ -51,7 +52,7 @@ const GroupsList = () => {
       try {
         setLoading(true);
         // Fetch a Stream-specific token from your backend
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chat/token`, {
+        const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/chat/token`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

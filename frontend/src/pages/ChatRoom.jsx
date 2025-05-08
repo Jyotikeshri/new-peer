@@ -41,11 +41,12 @@ import GroupInfoPanel from '../components/chat/GroupInfoPanel';
 import CallNotification from "../components/calls/CallNotification";
 import { MessageSimple } from 'stream-chat-react';
 import Chip from '@mui/material/Chip';
+import { fetchWithAuth } from "../utils/apiClient";
 
 
 // API function to get stream token
 const getStreamToken = async () => {
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chat/token`, {
+  const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/chat/token`, {
     credentials: 'include'
   });
   
@@ -90,7 +91,7 @@ const CustomMessage = (props) => {
 
 // Get group details from API
 const getGroupDetails = async (groupId) => {
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/groups/${groupId}`, {
+  const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups/${groupId}`, {
     credentials: 'include'
   });
   
@@ -514,7 +515,7 @@ export default function ChatRoom() {
   const handleLeaveGroup = async () => {
     try {
       // Call API to leave the group
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/groups/member`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups/member`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

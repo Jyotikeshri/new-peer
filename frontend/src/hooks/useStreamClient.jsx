@@ -1,6 +1,7 @@
 // src/hooks/useStreamClient.js
 import { useState, useEffect } from 'react';
 import { StreamChat } from 'stream-chat';
+import {fetchWithAuth} from "../utils/apiClient"
 
 export function useStreamClient(userId, userName) {
   const [client, setClient] = useState(null);
@@ -24,7 +25,7 @@ export function useStreamClient(userId, userName) {
 
         // 1. Fetch token from your backend
         console.log('Fetching Stream token...');
-        const res = await fetch(
+        const res = await fetchWithAuth(
           `${import.meta.env.VITE_API_BASE_URL}/chat/token`,
           { credentials: 'include' }
         );

@@ -24,6 +24,7 @@ import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 // import useUserStore from '../../contexts/userStore';
 import useReviewStore from '../../../contexts/reviewStore';
+import { fetchWithAuth } from '../../../utils/apiClient';
 
 // Helper function to validate MongoDB ObjectId
 const isValidObjectId = (id) => {
@@ -75,7 +76,7 @@ const UserReviewsPage = () => {
         setUserLoading(true);
         setUserError(null);
 
-        const response = await fetch(
+        const response = await fetchWithAuth(
           `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/${userId}`,
           { credentials: 'include' }
         );

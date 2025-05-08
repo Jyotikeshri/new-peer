@@ -22,10 +22,11 @@ import 'stream-chat-react/dist/css/v2/index.css';
 import useUserStore from "../contexts/userStore";
 import CustomChannelList from "../components/chat/CustomChannelList";
 import CreateGroupModal from "../components/chat/CreateGroupModal";
+import { fetchWithAuth } from "../utils/apiClient";
 
 // API calls
 const getStreamToken = async () => {
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chat/token`, {
+  const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/chat/token`, {
     credentials: 'include'
   });
   
@@ -37,7 +38,7 @@ const getStreamToken = async () => {
 };
 
 const getFriends = async () => {
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/friends`, {
+  const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/users/friends`, {
     credentials: 'include'
   });
   
@@ -49,7 +50,7 @@ const getFriends = async () => {
 };
 
 const getGroups = async () => {
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/groups`, {
+  const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups`, {
     credentials: 'include'
   });
   
@@ -332,7 +333,7 @@ export default function MessagesPage() {
   const handleChatWithFriend = async (friend) => {
     try {
       // First try to create/get the channel through the backend
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chat/direct`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/chat/direct`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

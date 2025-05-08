@@ -13,6 +13,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import PeopleIcon from '@mui/icons-material/People';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import useUserStore from '../../../contexts/userStore';
+import { fetchWithAuth } from '../../utils/apiClient';
 
 const FriendRequestButton = ({ profileUserId }) => {
   const { user, fetchUser } = useUserStore();
@@ -82,7 +83,7 @@ const FriendRequestButton = ({ profileUserId }) => {
     
     try {
       // Direct API call instead of using the store function
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friend-request`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friend-request`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -124,7 +125,7 @@ const FriendRequestButton = ({ profileUserId }) => {
     setIsLoading(true);
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friend-request/accept`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friend-request/accept`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -166,7 +167,7 @@ const FriendRequestButton = ({ profileUserId }) => {
     setIsLoading(true);
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friend-request/reject`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friend-request/reject`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -208,7 +209,7 @@ const FriendRequestButton = ({ profileUserId }) => {
     setIsLoading(true);
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/remove-friend`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/remove-friend`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

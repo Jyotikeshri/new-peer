@@ -37,6 +37,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import CreateIcon from '@mui/icons-material/Create';
 import useUserStore from '../../contexts/userStore';
 import toast from 'react-hot-toast';
+import { fetchWithAuth } from '../../utils/apiClient';
 
 // Tab panel component for different group categories
 function TabPanel(props) {
@@ -85,19 +86,19 @@ const GroupsDiscoveryPage = () => {
         
         // Use the correct discovery endpoint URLs
         // Note the /discovery/ in the path that was missing before
-        const recommendedResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/groups/discovery/recommended`, {
+        const recommendedResponse = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups/discovery/recommended`, {
           credentials: 'include'
         });
         
-        const trendingResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/groups/discovery/trending`, {
+        const trendingResponse = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups/discovery/trending`, {
           credentials: 'include'
         });
         
-        const forYouResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/groups/discovery/for-you`, {
+        const forYouResponse = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups/discovery/for-you`, {
           credentials: 'include'
         });
         
-        const withFriendsResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/groups/discovery/with-friends`, {
+        const withFriendsResponse = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups/discovery/with-friends`, {
           credentials: 'include'
         });
         
@@ -154,7 +155,7 @@ const GroupsDiscoveryPage = () => {
         setIsSearching(true);
         
         // Updated search endpoint
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/groups/discovery/search?q=${encodeURIComponent(searchQuery)}`, {
+        const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups/discovery/search?q=${encodeURIComponent(searchQuery)}`, {
           credentials: 'include'
         });
         
@@ -193,7 +194,7 @@ const GroupsDiscoveryPage = () => {
       setJoining(groupId);
       
       // Updated join endpoint
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/groups/discovery/join`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups/discovery/join`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

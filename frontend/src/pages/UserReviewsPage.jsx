@@ -24,6 +24,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import useReviewStore from '../contexts/reviewStore';
 import useUserStore from '../contexts/userStore';
+import { fetchWithAuth } from '../utils/apiClient';
 
 const StyledRatingBox = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -72,7 +73,7 @@ const UserReviewsPage = () => {
     const loadData = async () => {
       try {
         // Fetch the user data
-        const response = await fetch(
+        const response = await fetchWithAuth(
           `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/${userId}`,
           { credentials: 'include' }
         );

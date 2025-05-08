@@ -25,6 +25,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import useUserStore from '../../contexts/userStore';
 import toast from 'react-hot-toast';
+import { fetchWithAuth } from '../../utils/apiClient';
 
 // Common technology/topic options
 const TOPIC_OPTIONS = [
@@ -209,7 +210,7 @@ const CreateGroupForm = () => {
       }
       
       // Send request to create group
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/groups`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups`, {
         method: 'POST',
         credentials: 'include',
         body: formData

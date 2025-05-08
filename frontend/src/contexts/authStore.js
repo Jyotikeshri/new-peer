@@ -2,6 +2,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import useUserStore from './userStore';
+import { fetchWithAuth } from '../utils/apiClient';
 
 // Define the auth store with improved persistence
 const useAuthStore = create(
@@ -15,17 +16,22 @@ const useAuthStore = create(
       // Set authentication status manually
       setAuthenticated: (status) => set({ isAuthenticated: status }),
 
+      getAuthHeaders: () => {
+        const token = get().getToken();
+        return token ? { 'Authorization': `Bearer ${token}` } : {};
+      },
+
       // Login user
       login: async (email, password) => {
         try {
           set({ isLoading: true, error: null });
           
-          const response = await fetch('https://new-peer-1.onrender.com/api/auth/login', {
+          const response = await fetchWithAuth('https://new-peer-1.onrender.com/api/auth/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            credentials: 'include', // Important for cookie-based auth
+            credentials: 'include',
             body: JSON.stringify({ email, password }),
           });
 
@@ -42,6 +48,10 @@ const useAuthStore = create(
 
           // Explicitly handle token storage
           const token = data.token;
+
+          if (token) {
+            localStorage.setItem('auth_token', token);
+          }
           
           // For debugging - remove in production
           console.log("Login successful, received token:", token ? "Token received" : "No token in response");
@@ -72,7 +82,7 @@ const useAuthStore = create(
         try {
           set({ isLoading: true, error: null });
 
-          const response = await fetch('https://new-peer-1.onrender.com/api/auth/register', {
+          const response = await fetchWithAuth('https://new-peer-1.onrender.com/api/auth/register', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -123,7 +133,7 @@ const useAuthStore = create(
         try {
           set({ isLoading: true });
 
-          await fetch('https://new-peer-1.onrender.com/api/auth/logout', {
+          await fetchWithAuth('https://new-peer-1.onrender.com/api/auth/logout', {
             method: 'POST',
             credentials: 'include',
           });
@@ -153,12 +163,14 @@ const useAuthStore = create(
         try {
           set({ isLoading: true });
 
-          const response = await fetch('https://new-peer-1.onrender.com/api/users/profile', {
+          const headers = {
+            'Content-Type': 'application/json',
+            ...get().getAuthHeaders()  // Add auth header here
+          };
+
+          const response = await fetchWithAuth('https://new-peer-1.onrender.com/api/users/profile', {
             credentials: 'include',
-            headers: {
-              // Try to send token if we have it in the store
-              ...(get().token ? { 'Authorization': `Bearer ${get().token}` } : {})
-            }
+            headers: headers
           });
 
           if (!response.ok) {

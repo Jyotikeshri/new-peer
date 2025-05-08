@@ -31,6 +31,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Sidebar from '../Dashboard/components/Sidebar';
 import Header from '../Dashboard/components/Header';
 import useUserStore from '../../contexts/userStore';
+import { fetchWithAuth } from '../utils/apiClient';
 
 const FriendsPage = () => {
   const navigate = useNavigate();
@@ -64,7 +65,7 @@ const FriendsPage = () => {
       }
 
       try {
-        const response = await fetch(
+        const response = await fetchWithAuth(
           `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friends`,
           { credentials: 'include' }
         );
@@ -93,7 +94,7 @@ const FriendsPage = () => {
       }
 
       try {
-        const response = await fetch(
+        const response = await fetchWithAuth(
           `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friend-requests`,
           { credentials: 'include' }
         );

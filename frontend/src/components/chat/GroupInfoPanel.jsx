@@ -34,6 +34,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 import useUserStore from '../../contexts/userStore';
 import toast from 'react-hot-toast';
+import { fetchWithAuth } from '../../utils/apiClient';
 
 export default function GroupInfoPanel({ 
   open, 
@@ -84,7 +85,7 @@ export default function GroupInfoPanel({
     try {
       setLoading(true);
       
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/groups/member`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups/member`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -127,7 +128,7 @@ export default function GroupInfoPanel({
       
       setLoading(true);
       
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/groups/member`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups/member`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

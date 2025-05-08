@@ -1,6 +1,7 @@
 // src/contexts/userStore.js (updated with friends state)
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { fetchWithAuth } from '../utils/apiClient';
 
 const useUserStore = create(
   persist(
@@ -50,7 +51,7 @@ const useUserStore = create(
       fetchUser: async () => {
         try {
           set({ isLoading: true, error: null });
-          const response = await fetch(
+          const response = await fetchWithAuth(
             `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/profile`,
             { credentials: 'include' }
           );
@@ -62,7 +63,7 @@ const useUserStore = create(
           set({ user: userData, isLoading: false });
           
           // After fetching user, fetch detailed friends data
-          const friendsResponse = await fetch(
+          const friendsResponse = await fetchWithAuth(
             `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friends`,
             { credentials: 'include' }
           ).catch(err => {
@@ -87,7 +88,7 @@ const useUserStore = create(
         try {
           set({ isLoading: true, error: null });
           const isFormData = profileData instanceof FormData;
-          const response = await fetch(
+          const response = await fetchWithAuth(
             `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/profile`,
             {
               method: 'PUT',
@@ -114,7 +115,7 @@ const useUserStore = create(
       sendFriendRequest: async (targetUserId) => {
         try {
           set({ isLoading: true, error: null });
-          const response = await fetch(
+          const response = await fetchWithAuth(
             `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friend-request`,
             {
               method: 'POST',
@@ -148,7 +149,7 @@ const useUserStore = create(
       acceptFriendRequest: async (requesterId) => {
         try {
           set({ isLoading: true, error: null });
-          const response = await fetch(
+          const response = await fetchWithAuth(
             `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friend-request/accept`,
             {
               method: 'POST',
@@ -163,7 +164,7 @@ const useUserStore = create(
           }
           
           // Get the accepted friend's details
-          const friendResponse = await fetch(
+          const friendResponse = await fetchWithAuth(
             `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/${requesterId}`,
             { credentials: 'include' }
           );
@@ -211,7 +212,7 @@ const useUserStore = create(
       rejectFriendRequest: async (requesterId) => {
         try {
           set({ isLoading: true, error: null });
-          const response = await fetch(
+          const response = await fetchWithAuth(
             `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friend-request/reject`,
             {
               method: 'POST',
@@ -247,7 +248,7 @@ const useUserStore = create(
           set({ isLoading: true, error: null });
           const { user } = get();
           if (!user) throw new Error('Authentication required');
-          const response = await fetch(
+          const response = await fetchWithAuth(
             `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/add-friend`,
             {
               method: 'PUT',
@@ -262,7 +263,7 @@ const useUserStore = create(
           }
           
           // Get the new friend's details
-          const friendResponse = await fetch(
+          const friendResponse = await fetchWithAuth(
             `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/${friendId}`,
             { credentials: 'include' }
           );
@@ -297,7 +298,7 @@ const useUserStore = create(
           set({ isLoading: true, error: null });
           const { user } = get();
           if (!user) throw new Error('Authentication required');
-          const response = await fetch(
+          const response = await fetchWithAuth(
             `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/remove-friend`,
             {
               method: 'PUT',
@@ -339,7 +340,7 @@ const useUserStore = create(
       fetchBadges: async () => {
         try {
           set({ isLoading: true, error: null });
-          const response = await fetch(
+          const response = await fetchWithAuth(
             `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/get-badge`,
             { credentials: 'include' }
           );
@@ -364,7 +365,7 @@ const useUserStore = create(
       fetchFriends: async () => {
         try {
           set({ isLoading: true, error: null });
-          const response = await fetch(
+          const response = await fetchWithAuth(
             `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friends`,
             { credentials: 'include' }
           );

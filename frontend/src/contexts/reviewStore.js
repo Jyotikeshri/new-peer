@@ -1,5 +1,6 @@
 // src/contexts/reviewStore.js
 import { create } from 'zustand';
+import { fetchWithAuth } from '../utils/apiClient';
 
 // Helper function to validate MongoDB ObjectId format
 const isValidObjectId = (id) => {
@@ -35,7 +36,7 @@ const useReviewStore = create((set, get) => ({
   fetchMyReviews: async () => {
     try {
       set({ isLoading: true, error: null });
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/reviews`,
         { credentials: 'include' }
       );
@@ -83,7 +84,7 @@ const useReviewStore = create((set, get) => ({
         return cachedReviews;
       }
       
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/reviews/${userId}`,
         { credentials: 'include' }
       );
@@ -135,7 +136,7 @@ const useReviewStore = create((set, get) => ({
         throw new Error('You have already reviewed this person');
       }
       
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/reviews`,
         {
           method: 'POST',
@@ -180,7 +181,7 @@ const useReviewStore = create((set, get) => ({
       
       // Method 1: Check using the direct API endpoint
       try {
-        const response = await fetch(
+        const response = await fetchWithAuth(
           `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/reviews/check/${revieweeId}`,
           { credentials: 'include' }
         );

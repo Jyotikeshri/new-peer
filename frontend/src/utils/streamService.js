@@ -2,11 +2,12 @@
 // ------------------------------
 import { StreamChat } from 'stream-chat';
 import useUserStore from '../contexts/userStore';
+import { fetchWithAuth } from './apiClient';
 
 export const client = StreamChat.getInstance(import.meta.env.VITE_STREAM_API_KEY);
 
 const fetchStreamToken = async () => {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${import.meta.env.VITE_API_BASE_URL}/chat/token`,
     { credentials: 'include' }
   );

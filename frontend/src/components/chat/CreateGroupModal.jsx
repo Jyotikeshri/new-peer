@@ -20,6 +20,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import toast from 'react-hot-toast';
 import useUserStore from '../../contexts/userStore';
 import React from 'react';
+import { fetchWithAuth } from '../../utils/apiClient';
 
 export default function CreateGroupModal({ open, onClose, onGroupCreated }) {
   const [groupName, setGroupName] = useState('');
@@ -128,7 +129,7 @@ export default function CreateGroupModal({ open, onClose, onGroupCreated }) {
     try {
       setLoading(true);
       
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/groups/create`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

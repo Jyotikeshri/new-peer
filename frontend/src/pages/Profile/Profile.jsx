@@ -41,6 +41,7 @@ import useUserStore from '../../contexts/userStore';
 import Header from '../Dashboard/components/Header';
 import GroupList from './components/GroupsList';
 import { StreamChat } from 'stream-chat';
+import { fetchWithAuth } from '../../utils/apiClient';
 
 const Profile = () => {
   
@@ -68,7 +69,7 @@ const Profile = () => {
         return;
       }
       try {
-        const response = await fetch(
+        const response = await fetchWithAuth(
           `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/${id}`,
           { credentials: 'include' }
         );
