@@ -54,7 +54,7 @@ const Profile = () => {
   const [notification, setNotification] = useState({ open: false, message: '', type: 'success' });
   const [profileLoading, setProfileLoading] = useState(true);
 
-  console.log(user);
+  // console.log(user);
 
   // Check if viewing own profile
   const isOwnProfile = !id || (user && user._id === id);

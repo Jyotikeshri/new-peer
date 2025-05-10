@@ -61,7 +61,7 @@ const FriendsList = ({ friends = [] }) => {
         severity: 'info'
       });
       
-      console.log(`Disconnected from ${username}`);
+      // console.log(`Disconnected from ${username}`);
     } catch (error) {
       console.error('Disconnection error:', error);
       

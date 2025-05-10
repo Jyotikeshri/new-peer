@@ -28,7 +28,7 @@ const ProfileEditForm = ({ onSubmit, onCancel, isSubmitting }) => {
   // Get user from Zustand store
   const { user, updateAvatar } = useUserStore();
 
-  console.log(user);
+  // console.log(user);
   
   const [formData, setFormData] = useState({
     username: user?.username || '',

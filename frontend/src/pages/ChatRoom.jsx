@@ -317,7 +317,7 @@ export default function ChatRoom() {
             
             // Only show notification if the call is from someone else
             if (callData.callerId !== user._id) {
-              console.log('Incoming call from:', message.user.name);
+              // console.log('Incoming call from:', message.user.name);
               
               setCurrentCaller({
                 id: callData.callerId,
@@ -378,7 +378,7 @@ export default function ChatRoom() {
       setIsGroup(true);
       
       // Extract group ID from the database - we'll need to fetch it
-      fetch(`${import.meta.env.VITE_API_BASE_URL}/groups`, {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/groups/user`, {
         credentials: 'include'
       })
       .then(res => {
@@ -416,17 +416,17 @@ export default function ChatRoom() {
   // Initialize chat when we have the token and user
   useEffect(() => {
     if (!tokenData?.token || !user || !channelId) {
-      console.log("Missing required data:", { 
-        hasToken: !!tokenData?.token, 
-        hasUser: !!user, 
-        channelId 
-      });
+      // console.log("Missing required data:", { 
+      //   hasToken: !!tokenData?.token, 
+      //   hasUser: !!user, 
+      //   channelId 
+      // });
       return;
     }
     
     const initChat = async () => {
       try {
-        console.log("Initializing stream chat...");
+        // console.log("Initializing stream chat...");
         
         // Get Stream API key from env
         const apiKey = import.meta.env.VITE_STREAM_API_KEY;
@@ -447,7 +447,7 @@ export default function ChatRoom() {
           tokenData.token
         );
         
-        console.log("Connected to Stream chat");
+        // console.log("Connected to Stream chat");
         
         // Check if the channel exists and the user is a member
         try {
@@ -458,7 +458,7 @@ export default function ChatRoom() {
           
           // Check if the requested channel is in the user's channels
           const channelExists = userChannels.some(ch => ch.id === channelId);
-          console.log(`Channel ${channelId} exists for user: ${channelExists}`);
+          // console.log(`Channel ${channelId} exists for user: ${channelExists}`);
           
           if (!channelExists && !channelId.includes('__')) {
             // If it's a group chat but doesn't exist for this user
@@ -475,7 +475,7 @@ export default function ChatRoom() {
         
         // Watch the channel to receive messages
         await currentChannel.watch();
-        console.log("Watching channel:", channelId);
+        // console.log("Watching channel:", channelId);
         
         // Set the client and channel in state
         setChatClient(client);
@@ -503,7 +503,7 @@ export default function ChatRoom() {
     // Clean up on unmount
     return () => {
       if (chatClient) {
-        console.log("Disconnecting chat client");
+        // console.log("Disconnecting chat client");
         chatClient.disconnectUser().catch(err => {
           console.error("Error disconnecting:", err);
         });

@@ -193,7 +193,7 @@ const useReviewStore = create((set, get) => ({
           }
         }
       } catch (directCheckError) {
-        console.log('Direct check failed, falling back to reviews list:', directCheckError);
+        // console.log('Direct check failed, falling back to reviews list:', directCheckError);
         // Continue to fallback methods if the direct check fails
       }
       

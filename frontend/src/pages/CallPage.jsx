@@ -44,7 +44,7 @@ const CallPage = () => {
     // Handle cleanup when component unmounts
     return () => {
       if (videoClientInstance) {
-        console.log("Disconnecting video client on unmount");
+        // console.log("Disconnecting video client on unmount");
         videoClientInstance.disconnectUser()
           .catch(err => console.error("Error disconnecting video client:", err));
         videoClientInstance = null;
@@ -55,21 +55,21 @@ const CallPage = () => {
   useEffect(() => {
     const initCall = async () => {
       if (!tokenData?.token || !user || !callId) {
-        console.log("Missing required data for call:", { 
-          hasToken: !!tokenData?.token, 
-          hasUser: !!user, 
-          callId 
-        });
+        // console.log("Missing required data for call:", { 
+        //   hasToken: !!tokenData?.token, 
+        //   hasUser: !!user, 
+        //   callId 
+        // });
         return;
       }
 
       try {
         setIsConnecting(true);
-        console.log("Initializing Stream video client...");
+        // console.log("Initializing Stream video client...");
 
         // If we already have a client instance, disconnect it first
         if (videoClientInstance) {
-          console.log("Disconnecting existing video client");
+          // console.log("Disconnecting existing video client");
           await videoClientInstance.disconnectUser();
           videoClientInstance = null;
         }
@@ -94,11 +94,11 @@ const CallPage = () => {
 
         // Only create if needed, otherwise just join
         const existingCall = await callInstance.getOrCreate();
-        console.log("Call exists or created:", existingCall);
+        // console.log("Call exists or created:", existingCall);
 
         // Join the call - don't use create:true to avoid duplication issues
         await callInstance.join();
-        console.log("Joined call successfully");
+        // console.log("Joined call successfully");
 
         setClient(videoClient);
         setCall(callInstance);

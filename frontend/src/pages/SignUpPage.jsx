@@ -15,11 +15,17 @@ import {
   Step,
   StepLabel,
   Divider,
-  FormControlLabel,
   Checkbox,
-  FormHelperText,
   Snackbar,
   Alert,
+  Autocomplete, 
+  CircularProgress,
+  Select,
+  MenuItem,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  Popper
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import { 
@@ -29,23 +35,55 @@ import {
   Person, 
   School, 
   LockOutlined,
+  CalendarMonth
 } from '@mui/icons-material';
 import GoogleIcon from '@mui/icons-material/Google';
 import useAuthStore from '../contexts/authStore';
 
-// Example university options
-const universities = [
-  "Harvard University",
-  "Stanford University",
-  "MIT",
-  "Oxford University",
-  "Princeton University",
-  "Cambridge University",
-  "Yale University",
-  "Columbia University",
-  "University of Chicago",
-  "Imperial College London",
-  "Other"
+// Pre-loaded list of Indian universities for faster performance
+const INDIAN_UNIVERSITIES = [
+  { id: '1', name: 'University of Delhi', state: 'Delhi' },
+  { id: '2', name: 'Indian Institute of Technology, Delhi', state: 'Delhi' },
+  { id: '3', name: 'Indian Institute of Technology, Bombay', state: 'Maharashtra' },
+  { id: '4', name: 'Indian Institute of Technology, Madras', state: 'Tamil Nadu' },
+  { id: '5', name: 'Indian Institute of Science', state: 'Karnataka' },
+  { id: '6', name: 'Jawaharlal Nehru University', state: 'Delhi' },
+  { id: '7', name: 'Banaras Hindu University', state: 'Uttar Pradesh' },
+  { id: '8', name: 'Anna University', state: 'Tamil Nadu' },
+  { id: '9', name: 'University of Mumbai', state: 'Maharashtra' },
+  { id: '10', name: 'University of Calcutta', state: 'West Bengal' },
+  { id: '11', name: 'Aligarh Muslim University', state: 'Uttar Pradesh' },
+  { id: '12', name: 'Jadavpur University', state: 'West Bengal' },
+  { id: '13', name: 'Jamia Millia Islamia', state: 'Delhi' },
+  { id: '14', name: 'Savitribai Phule Pune University', state: 'Maharashtra' },
+  { id: '15', name: 'Amity University', state: 'Uttar Pradesh' },
+  { id: '16', name: 'Manipal Academy of Higher Education', state: 'Karnataka' },
+  { id: '17', name: 'BITS Pilani', state: 'Rajasthan' },
+  { id: '18', name: 'Symbiosis International University', state: 'Maharashtra' },
+  { id: '19', name: 'Vellore Institute of Technology', state: 'Tamil Nadu' },
+  { id: '20', name: 'SRM Institute of Science and Technology', state: 'Tamil Nadu' },
+  { id: '21', name: 'Chennai University', state: 'Tamil Nadu' },
+  { id: '22', name: 'Osmania University', state: 'Telangana' },
+  { id: '23', name: 'University of Hyderabad', state: 'Telangana' },
+  { id: '24', name: 'Punjab University', state: 'Punjab' },
+  { id: '25', name: 'Chandigarh University', state: 'Punjab' },
+  { id: '26', name: 'University of Kashmir', state: 'Jammu & Kashmir' },
+  { id: '27', name: 'Lovely Professional University', state: 'Punjab' },
+  { id: '28', name: 'Gujarat University', state: 'Gujarat' },
+  { id: '29', name: 'Assam University', state: 'Assam' },
+  { id: '30', name: 'Tezpur University', state: 'Assam' },
+  { id: '31', name: 'Rajasthan University', state: 'Rajasthan' },
+  { id: '32', name: 'Kurukshetra University', state: 'Haryana' },
+  { id: '33', name: 'MITS Gwalior', state: 'Madhya Pradesh' },
+  { id: '34', name: 'IIT Guwahati', state: 'Assam' },
+  { id: '35', name: 'IIT Kharagpur', state: 'West Bengal' },
+  { id: '36', name: 'IIT Kanpur', state: 'Uttar Pradesh' },
+  { id: '37', name: 'NIT Trichy', state: 'Tamil Nadu' },
+  { id: '38', name: 'NIT Warangal', state: 'Telangana' },
+  { id: '39', name: 'NIT Rourkela', state: 'Odisha' },
+  { id: '40', name: 'NIT Surathkal', state: 'Karnataka' },
+  { id: '41', name: 'Delhi Skill and EntrepreneurShip University', state: 'Delhi' },
+  { id: 'other', name: 'Other', state: '' }
 ];
 
 // Example subject options
@@ -78,6 +116,11 @@ const SignupPage = () => {
     message: '',
     severity: 'success'
   });
+
+  // States for university autocomplete
+  const [universities, setUniversities] = useState(INDIAN_UNIVERSITIES);
+  const [loadingUniversities, setLoadingUniversities] = useState(false);
+  const [universityInputValue, setUniversityInputValue] = useState('');
   
   // Form data
   const [formData, setFormData] = useState({
@@ -103,6 +146,44 @@ const SignupPage = () => {
     yearOfStudy: true,
     agreeToTerms: true
   });
+
+  // Fetch additional universities from API if needed
+  useEffect(() => {
+    const fetchMoreUniversities = async () => {
+      // Only fetch if we're using the basic list
+      if (universities.length === INDIAN_UNIVERSITIES.length) {
+        setLoadingUniversities(true);
+        try {
+          const response = await fetch('https://universities.hipolabs.com/search?country=india');
+          if (response.ok) {
+            const data = await response.json();
+            
+            // Format and merge with existing universities
+            const formattedUniversities = data.map(uni => ({
+              id: uni.name,
+              name: uni.name,
+              state: uni.state_province || 'Unknown'
+            }));
+            
+            // Remove duplicates and merge
+            const existingNames = new Set(universities.map(u => u.name));
+            const newUniversities = formattedUniversities.filter(uni => !existingNames.has(uni.name));
+            
+            if (newUniversities.length > 0) {
+              setUniversities([...universities, ...newUniversities]);
+            }
+          }
+        } catch (error) {
+          // Just use the existing INDIAN_UNIVERSITIES array if the API fails
+          console.error('Error fetching additional universities:', error);
+        } finally {
+          setLoadingUniversities(false);
+        }
+      }
+    };
+    
+    fetchMoreUniversities();
+  }, [universities]);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -373,100 +454,184 @@ const SignupPage = () => {
             className="mt-6"
           >
             <Grid container spacing={4}>
-              <Grid item xs={12}>
-                <Box className="flex flex-col">
-                  <Box className="relative border border-gray-200 rounded-lg px-4 py-3 mb-4">
-                    <Box className="absolute -top-3 bg-white px-2 ml-2">
-                      <Typography variant="body2" className="text-text-gray">
-                        University/Institution
-                      </Typography>
-                    </Box>
-                    <Box className="flex items-center">
-                      <School className="text-text-gray mr-3" />
-                      <select
-                        name="university"
-                        value={formData.university}
-                        onChange={handleChange}
-                        className={`w-full bg-transparent outline-none ${!validation.university ? 'text-red-500' : formData.university ? 'text-deep-navy' : 'text-gray-400'}`}
-                      >
-                        <option value="" disabled>Select your university</option>
-                        {universities.map((university) => (
-                          <option key={university} value={university}>
-                            {university}
-                          </option>
-                        ))}
-                      </select>
-                    </Box>
-                  </Box>
-                  {!validation.university && (
-                    <Typography variant="caption" className="text-red-500 -mt-3 ml-2">
-                      Please select your university
-                    </Typography>
-                  )}
-                </Box>
-              </Grid>
+            <Grid item xs={12}>
+  <Autocomplete
+    id="university-select"
+    options={universities}
+    getOptionLabel={(option) => {
+      // Handle both string and object options
+      if (typeof option === 'string') return option;
+      return option.name || '';
+    }}
+    loading={loadingUniversities}
+    value={formData.university ? 
+      (typeof formData.university === 'string' ? 
+        { name: formData.university } : 
+        formData.university) : 
+      null
+    }
+    inputValue={universityInputValue}
+    onInputChange={(event, newInputValue) => {
+      setUniversityInputValue(newInputValue);
+    }}
+    onChange={(event, newValue) => {
+      handleChange({
+        target: {
+          name: 'university',
+          value: newValue ? newValue.name : ''
+        }
+      });
+    }}
+    renderInput={(params) => (
+      <TextField
+        {...params}
+        label="University/Institution"
+        variant="outlined"
+        error={!validation.university}
+        helperText={!validation.university && 'Please select your university'}
+        InputProps={{
+          ...params.InputProps,
+          startAdornment: (
+            <>
+              <InputAdornment position="start">
+                <School className="text-text-gray" />
+              </InputAdornment>
+              {params.InputProps.startAdornment}
+            </>
+          ),
+          endAdornment: (
+            <>
+              {loadingUniversities ? <CircularProgress color="inherit" size={20} /> : null}
+              {params.InputProps.endAdornment}
+            </>
+          ),
+        }}
+        fullWidth
+      />
+    )}
+    renderOption={(props, option) => (
+      <li {...props}>
+        <Box component="span" sx={{ fontWeight: 'bold' }}>
+          {option.name}
+        </Box>
+        {option.state && (
+          <Box component="span" sx={{ ml: 1, color: 'text.secondary', fontSize: '0.875rem' }}>
+            ({option.state})
+          </Box>
+        )}
+      </li>
+    )}
+    filterOptions={(options, { inputValue }) => {
+      const inputValueLower = inputValue.toLowerCase();
+      return options.filter(option => 
+        option.name.toLowerCase().includes(inputValueLower) || 
+        (option.state && option.state.toLowerCase().includes(inputValueLower))
+      );
+    }}
+    freeSolo // Allow custom values
+    fullWidth
+    // Add these props to make the dropdown menu wider
+    ListboxProps={{
+      style: { maxHeight: 300 }
+    }}
+    // Make the dropdown menu wider and add some styling
+    PopperComponent={(props) => (
+      <Popper
+        {...props}
+        style={{ width: 400 }} // Wider dropdown
+        placement="bottom-start"
+      />
+    )}
+  />
+</Grid>
               
               <Grid item xs={12} sm={6}>
-                <Box className="flex flex-col">
-                  <Box className="relative border border-gray-200 rounded-lg px-4 py-3 mb-4">
-                    <Box className="absolute -top-3 bg-white px-2 ml-2">
-                      <Typography variant="body2" className="text-text-gray">
-                        Field of Study
-                      </Typography>
-                    </Box>
-                    <select
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      className={`w-full bg-transparent outline-none ${!validation.subject ? 'text-red-500' : formData.subject ? 'text-deep-navy' : 'text-gray-400'}`}
-                    >
-                      <option value="" disabled>Select field</option>
-                      {subjects.map((subject) => (
-                        <option key={subject} value={subject}>
-                          {subject}
-                        </option>
-                      ))}
-                    </select>
-                  </Box>
+                <FormControl fullWidth error={!validation.subject} variant="outlined">
+                  <InputLabel id="subject-label">Field of Study</InputLabel>
+                  <Select
+                    labelId="subject-label"
+                    id="subject-select"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    label="Field of Study"
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <School className="text-text-gray" />
+                      </InputAdornment>
+                    }
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 300,
+                          boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.15)'
+                        }
+                      },
+                      anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                      },
+                    }}
+                  >
+                    <MenuItem value="" disabled>
+                      <em>Select field</em>
+                    </MenuItem>
+                    {subjects.map((subject) => (
+                      <MenuItem key={subject} value={subject} style={{ minHeight: '40px' }}>
+                        {subject}
+                      </MenuItem>
+                    ))}
+                  </Select>
                   {!validation.subject && (
-                    <Typography variant="caption" className="text-red-500 -mt-3 ml-2">
-                      Please select your field of study
-                    </Typography>
+                    <FormHelperText>Please select your field of study</FormHelperText>
                   )}
-                </Box>
+                </FormControl>
               </Grid>
               
               <Grid item xs={12} sm={6}>
-                <Box className="flex flex-col">
-                  <Box className="relative border border-gray-200 rounded-lg px-4 py-3 mb-4">
-                    <Box className="absolute -top-3 bg-white px-2 ml-2">
-                      <Typography variant="body2" className="text-text-gray">
-                        Year
-                      </Typography>
-                    </Box>
-                    <select
-                      name="yearOfStudy"
-                      value={formData.yearOfStudy}
-                      onChange={handleChange}
-                      className={`w-full bg-transparent outline-none ${!validation.yearOfStudy ? 'text-red-500' : formData.yearOfStudy ? 'text-deep-navy' : 'text-gray-400'}`}
-                    >
-                      <option value="" disabled>Select year</option>
-                      <option value="1st">1st Year</option>
-                      <option value="2nd">2nd Year</option>
-                      <option value="3rd">3rd Year</option>
-                      <option value="4th">4th Year</option>
-                      <option value="5+">5+ Year</option>
-                      <option value="Masters">Masters</option>
-                      <option value="PhD">PhD</option>
-                      <option value="Postdoc">Postdoc</option>
-                    </select>
-                  </Box>
+                <FormControl fullWidth error={!validation.yearOfStudy} variant="outlined">
+                  <InputLabel id="year-label">Year of Study</InputLabel>
+                  <Select
+                    labelId="year-label"
+                    id="year-select"
+                    name="yearOfStudy"
+                    value={formData.yearOfStudy}
+                    onChange={handleChange}
+                    label="Year of Study"
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <CalendarMonth className="text-text-gray" />
+                      </InputAdornment>
+                    }
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 300,
+                          boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.15)'
+                        }
+                      },
+                      anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                      },
+                    }}
+                  >
+                    <MenuItem value="" disabled>
+                      <em>Select year</em>
+                    </MenuItem>
+                    <MenuItem value="1st">1st Year</MenuItem>
+                    <MenuItem value="2nd">2nd Year</MenuItem>
+                    <MenuItem value="3rd">3rd Year</MenuItem>
+                    <MenuItem value="4th">4th Year</MenuItem>
+                    <MenuItem value="5+">5+ Year</MenuItem>
+                    <MenuItem value="Masters">Masters</MenuItem>
+                    <MenuItem value="PhD">PhD</MenuItem>
+                    <MenuItem value="Postdoc">Postdoc</MenuItem>
+                  </Select>
                   {!validation.yearOfStudy && (
-                    <Typography variant="caption" className="text-red-500 -mt-3 ml-2">
-                      Please select your year of study
-                    </Typography>
+                    <FormHelperText>Please select your year of study</FormHelperText>
                   )}
-                </Box>
+                </FormControl>
               </Grid>
             </Grid>
           </motion.div>

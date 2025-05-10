@@ -35,10 +35,10 @@ class StreamNotificationService {
       );
       
       this.currentUser = userId;
-      console.log('Connected to Stream as user:', userId);
+      // console.log('Connected to Stream as user:', userId);
       return true;
     } catch (error) {
-      console.error('Error connecting to Stream:', error);
+      // console.error('Error connecting to Stream:', error);
       return false;
     }
   }

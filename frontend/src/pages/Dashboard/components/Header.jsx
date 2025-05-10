@@ -39,7 +39,7 @@ const Header = ({ onToggleSidebar }) => {
   };
 
   const handleProfile = () => {
-    navigate(`/profile/${user?._id}`);
+    navigate(`/profile`);
     handleClose();
   };
 

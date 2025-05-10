@@ -24,7 +24,7 @@ export function useStreamClient(userId, userName) {
         setError(null);
 
         // 1. Fetch token from your backend
-        console.log('Fetching Stream token...');
+        // console.log('Fetching Stream token...');
         const res = await fetchWithAuth(
           `${import.meta.env.VITE_API_BASE_URL}/chat/token`,
           { credentials: 'include' }
@@ -40,7 +40,7 @@ export function useStreamClient(userId, userName) {
           throw new Error('No token returned from the server');
         }
 
-        console.log('Token received, connecting to Stream...');
+        // console.log('Token received, connecting to Stream...');
 
         // 2. Instantiate & connect
         chatClient = StreamChat.getInstance(import.meta.env.VITE_STREAM_API_KEY);
@@ -53,7 +53,7 @@ export function useStreamClient(userId, userName) {
           data.token
         );
         
-        console.log('Successfully connected to Stream');
+        // console.log('Successfully connected to Stream');
         
         // Only update state if component is still mounted
         if (isMounted) {
@@ -89,7 +89,7 @@ export function useStreamClient(userId, userName) {
       isMounted = false; // Prevent state updates after unmount
       
       if (chatClient) {
-        console.log('Disconnecting from Stream...');
+        // console.log('Disconnecting from Stream...');
         chatClient.disconnectUser().catch(err => 
           console.error('Error disconnecting from Stream:', err)
         );

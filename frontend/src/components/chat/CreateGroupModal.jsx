@@ -129,7 +129,7 @@ export default function CreateGroupModal({ open, onClose, onGroupCreated }) {
     try {
       setLoading(true);
       
-      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups/create`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

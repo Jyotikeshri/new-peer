@@ -50,7 +50,7 @@ const getFriends = async () => {
 };
 
 const getGroups = async () => {
-  const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups`, {
+  const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/groups/user`, {
     credentials: 'include'
   });
   
@@ -127,13 +127,13 @@ export default function MessagesPage() {
   // Initialize chat when we have the token and user
   useEffect(() => {
     if (!tokenData?.token || !user?._id) {
-      console.log("Missing token or user ID, not initializing chat");
+      // console.log("Missing token or user ID, not initializing chat");
       return;
     }
     
     const initChat = async () => {
       try {
-        console.log("Initializing stream chat...");
+        // console.log("Initializing stream chat...");
         
         // Get Stream API key from env
         const apiKey = import.meta.env.VITE_STREAM_API_KEY;
@@ -144,11 +144,11 @@ export default function MessagesPage() {
         // Initialize the client
         const client = StreamChat.getInstance(apiKey);
         
-        console.log("Connecting user:", {
-          id: user._id,
-          name: user.username,
-          image: user.avatar
-        });
+        // console.log("Connecting user:", {
+        //   id: user._id,
+        //   name: user.username,
+        //   image: user.avatar
+        // });
         
         // Connect the user with detailed logging
         try {
@@ -160,7 +160,7 @@ export default function MessagesPage() {
             },
             tokenData.token
           );
-          console.log("Connected to Stream chat successfully");
+          // console.log("Connected to Stream chat successfully");
         } catch (connErr) {
           console.error("Error connecting user to Stream:", connErr);
           throw connErr;
@@ -181,7 +181,7 @@ export default function MessagesPage() {
     // Clean up on unmount
     return () => {
       if (chatClient) {
-        console.log("Disconnecting chat client");
+        // console.log("Disconnecting chat client");
         chatClient.disconnectUser().catch(err => {
           console.error("Error disconnecting:", err);
         });
@@ -192,29 +192,29 @@ export default function MessagesPage() {
   // Create channels for friends and groups
   useEffect(() => {
     if (!chatClient || !user?._id) {
-      console.log("Missing chat client or user ID, not creating channels");
+      // console.log("Missing chat client or user ID, not creating channels");
       return;
     }
     
     // Update the initializeChannels function in MessagesPage.jsx
     const initializeChannels = async () => {
       try {
-        console.log("Initializing channels...");
+        // console.log("Initializing channels...");
         
         // Initialize friend channels - REMOVE THIS SECTION
         // Direct messages will be created when user clicks on a friend
         
         // Initialize group channels
         if (groups?.length) {
-          console.log("Initializing channels for groups...");
+          // console.log("Initializing channels for groups...");
           
           const groupPromises = groups.map(async (group) => {
             try {
-              console.log("Loading channel for group:", {
-                groupId: group._id,
-                groupName: group.name,
-                channelId: group.channelId
-              });
+              // console.log("Loading channel for group:", {
+              //   groupId: group._id,
+              //   groupName: group.name,
+              //   channelId: group.channelId
+              // });
               
               // Initialize the channel without trying to create it
               // Just query for the channel that should already exist on the server
@@ -222,7 +222,7 @@ export default function MessagesPage() {
               
               // Watch the channel to receive updates
               await channel.watch();
-              console.log(`Group channel loaded: ${group.channelId}`);
+              // console.log(`Group channel loaded: ${group.channelId}`);
             } catch (err) {
               console.error(`Error loading group channel ${group.channelId}:`, err);
               // Don't throw error to allow other channels to load
@@ -241,7 +241,7 @@ export default function MessagesPage() {
   
   // Handle authentication errors
   if (!user?._id) {
-    console.log("No user ID found");
+    // console.log("No user ID found");
     return (
       <Box className="flex flex-col items-center justify-center h-screen p-4">
         <Typography variant="h6" className="mb-4 text-red-600">

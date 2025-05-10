@@ -141,7 +141,7 @@ const LoginPage = () => {
 
   const handleGoogleLogin = () => {
     // Implement Google OAuth login
-    console.log('Google login clicked');
+    // console.log('Google login clicked');
   };
 
   // Animation variants
@@ -271,7 +271,7 @@ const LoginPage = () => {
               </Grid>
             </form>
             
-            <Divider className="my-6">OR</Divider>
+            {/* <Divider className="my-6">OR</Divider>
             
             <Button
               fullWidth
@@ -281,7 +281,7 @@ const LoginPage = () => {
               className="py-3 rounded-full mb-6"
             >
               Continue with Google
-            </Button>
+            </Button> */}
             
             <Typography className="text-center text-text-gray">
               Don't have an account?{' '}

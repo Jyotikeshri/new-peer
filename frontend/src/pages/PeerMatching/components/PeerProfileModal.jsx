@@ -139,7 +139,7 @@ const PeerProfileModal = ({
           // Always fetch the peer's reviews regardless of connection status
           const reviews = await fetchUserReviews(peerId);
           // console.log(reviews);
-          console.log(peer);
+          // console.log(peer);
           if (reviews) {
             setPeerReviews(reviews);
           }
@@ -165,7 +165,7 @@ const PeerProfileModal = ({
               if (userReview) {
                 // User has already reviewed, override the previous check
                 setCanReview(false);
-                console.log('User has already reviewed this peer (found in reviews list)');
+                // console.log('User has already reviewed this peer (found in reviews list)');
               }
             }
           } else {

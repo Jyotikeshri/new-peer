@@ -39,7 +39,7 @@ const CustomChannelList = ({ client, filters, sort }) => {
           }
         );
         
-        console.log('Fetched channels:', response);
+      
         
         setChannels(response);
       } catch (err) {
@@ -54,13 +54,13 @@ const CustomChannelList = ({ client, filters, sort }) => {
 
     // Set up event listeners for new messages and channel updates
     const handleMessageNew = (event) => {
-      console.log('New message event:', event);
+      // console.log('New message event:', event);
       // Refresh channels to update the list with new messages
       client.queryChannels(filters, sort, {
         watch: true,
         state: true,
       }).then(updatedChannels => {
-        console.log('Updated channels after new message:', updatedChannels);
+        // console.log('Updated channels after new message:', updatedChannels);
         setChannels(updatedChannels);
       });
     };
@@ -112,7 +112,7 @@ const CustomChannelList = ({ client, filters, sort }) => {
 
   // Render a channel preview
   const renderChannelPreview = (channel) => {
-    console.log('Rendering channel:', channel.id, channel.data);
+    // console.log('Rendering channel:', channel.id, channel.data);
     
     const isGroup = isGroupChat(channel);
     let displayName, avatarSrc, subtitle;

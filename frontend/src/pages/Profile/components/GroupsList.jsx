@@ -87,7 +87,7 @@ const GroupsList = () => {
           data.token
         );
         
-        console.log("Successfully connected to Stream Chat");
+        // console.log("Successfully connected to Stream Chat");
         setClient(streamClient);
         
         // After client is initialized, fetch channels
@@ -131,7 +131,7 @@ const GroupsList = () => {
       
       // Filter to only include group channels (using the same logic as CustomChannelList)
       const groupChannels = response.filter(channel => isGroupChat(channel));
-      console.log('Fetched group channels:', groupChannels);
+      // console.log('Fetched group channels:', groupChannels);
       
       setChannels(groupChannels);
       setLoading(false);
