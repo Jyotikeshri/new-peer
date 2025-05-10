@@ -12,13 +12,13 @@ import useAuthStore from './contexts/authStore';
 import useUserStore from './contexts/userStore';
 import { useNotificationStore } from './contexts/notificationStore';
 import streamNotificationService from './services/streamNotificationService';
-import { CallContextProvider, GlobalCallNotification } from './contexts/CallContext';
+
 import { getStreamToken } from './lib/api';
 
 import MainLayout from './components/layout/MainLayout';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
+
 import Dashboard from './pages/Dashboard/Dashboard';
 import Profile from './pages/Profile/Profile';
 import PeerMatchingPage from './pages/PeerMatching/PeerMatchingPage';
@@ -31,6 +31,7 @@ import NotificationsPage from './pages/NotificationsPage';
 import UserReviewsPage from './pages/Profile/components/UserReviewsPage';
 import GroupsDiscoveryPage from './pages/Group/GroupDiscoveryPage';
 import CreateGroupForm from './pages/Group/CreateGroupForm';
+import SignupPage from './pages/SignUpPage';
 
 // Create a single QueryClient instance
 const queryClient = new QueryClient();
