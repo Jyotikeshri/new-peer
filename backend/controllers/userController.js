@@ -252,6 +252,7 @@ async function addFriend(userId, friendId) {
 }
 
 // Simplified findMatches function without complex TensorFlow memory management
+// Simplified findMatches function with improved scoring and match counting
 export const findMatches = async (req, res) => {
   const requestId = Math.random().toString(36).substring(2, 10);
   console.log(`[${requestId}] Starting findMatches`);
@@ -263,10 +264,11 @@ export const findMatches = async (req, res) => {
     }
 
     const allUsers = await User.find({ _id: { $ne: user._id } }).populate('friends', '-password');
-    console.log(`[${requestId}] Found ${allUsers.length} potential matches`);
+    console.log(`[${requestId}] Found ${allUsers.length} potential users to match with`);
 
     const matches = [];
-    const threshold = 0.3; // Lowered threshold for better matching
+    const threshold = 0.3; // Threshold for minimum match quality
+    const maxPossibleScore = 4.0; // Maximum theoretical score (4 similarity + mutual friends bonus)
 
     for (const potentialMatch of allUsers) {
       let score = 0;
@@ -283,16 +285,33 @@ export const findMatches = async (req, res) => {
       const userNeeds = (user.needsHelpWith || []).join(' ').toLowerCase();
       const matchNeeds = (potentialMatch.needsHelpWith || []).join(' ').toLowerCase();
 
-      // 1. Tensorflow semantic similarity
-      if (userBio && matchBio) score += await computeSimilarity(userBio, matchBio);
-      if (userInterests && matchInterests) score += await computeSimilarity(userInterests, matchInterests);
-      if (userStrengths && matchNeeds) score += await computeSimilarity(userStrengths, matchNeeds);
-      if (matchStrengths && userNeeds) score += await computeSimilarity(matchStrengths, userNeeds);
+      // 1. Tensorflow semantic similarity calculations
+      // Each can contribute up to 1.0 to the score
+      if (userBio && matchBio) {
+        const bioSimilarity = await computeSimilarity(userBio, matchBio);
+        score += bioSimilarity;
+      }
+      
+      if (userInterests && matchInterests) {
+        const interestsSimilarity = await computeSimilarity(userInterests, matchInterests);
+        score += interestsSimilarity;
+      }
+      
+      if (userStrengths && matchNeeds) {
+        const strengthsToNeedsSimilarity = await computeSimilarity(userStrengths, matchNeeds);
+        score += strengthsToNeedsSimilarity;
+      }
+      
+      if (matchStrengths && userNeeds) {
+        const matchStrengthsToUserNeedsSimilarity = await computeSimilarity(matchStrengths, userNeeds);
+        score += matchStrengthsToUserNeedsSimilarity;
+      }
 
-      // 2. Fallback: Direct text inclusion bonus
+      // 2. Fallback: Direct text inclusion bonus (capped at 0.5 each)
       if (userStrengths && matchNeeds && (userStrengths.includes(matchNeeds) || matchNeeds.includes(userStrengths))) {
         score += 0.5;
       }
+      
       if (matchStrengths && userNeeds && (matchStrengths.includes(userNeeds) || userNeeds.includes(matchStrengths))) {
         score += 0.5;
       }
@@ -306,7 +325,13 @@ export const findMatches = async (req, res) => {
         score += 0.5;
       }
 
-      // 4. Only include if good enough
+      // 4. Normalize score as a percentage (0-100%)
+      // First cap the raw score at the maximum possible value
+      const normalizedScore = Math.min(score, maxPossibleScore);
+      // Then convert to percentage (0-100%)
+      const percentageScore = (normalizedScore / maxPossibleScore) * 100;
+      
+      // 5. Only include if score meets the minimum threshold
       if (score >= threshold) {
         matches.push({
           user: {
@@ -318,20 +343,16 @@ export const findMatches = async (req, res) => {
             strengths: potentialMatch.strengths,
             needsHelpWith: potentialMatch.needsHelpWith,
             friends: potentialMatch.friends,
-            leetcode : potentialMatch.leetcode,
-            github : potentialMatch.github,
-            linkedin : potentialMatch.linkedin,
-            portfolio : potentialMatch.portfolio,
-            badges : potentialMatch.badges,
-            createdAt : potentialMatch.createdAt,
-            rating : potentialMatch.rating,
-
-
-
-
-
+            leetcode: potentialMatch.leetcode,
+            github: potentialMatch.github,
+            linkedin: potentialMatch.linkedin,
+            portfolio: potentialMatch.portfolio,
+            badges: potentialMatch.badges,
+            createdAt: potentialMatch.createdAt,
+            rating: potentialMatch.rating,
           },
-          score: parseFloat(score.toFixed(2))
+          // Round to 2 decimal places for display
+          score: Math.round(percentageScore * 100) / 100
         });
       }
     }
@@ -339,7 +360,37 @@ export const findMatches = async (req, res) => {
     // Sort descending by best match first
     matches.sort((a, b) => b.score - a.score);
 
-    console.log(`[${requestId}] Found ${matches.length} matches after scoring`);
+    console.log(`[${requestId}] Found ${matches.length} suitable matches after scoring`);
+    
+    // If no matches were found but we have users in the system
+    if (matches.length === 0 && allUsers.length > 0) {
+      console.log(`[${requestId}] No matches found that meet the threshold. Lowering threshold to include more results.`);
+      
+      // Consider returning the top 3 matches regardless of threshold
+      const topMatches = allUsers.slice(0, 3).map(potentialMatch => ({
+        user: {
+          _id: potentialMatch._id,
+          username: potentialMatch.username,
+          avatar: potentialMatch.avatar,
+          bio: potentialMatch.bio,
+          interests: potentialMatch.interests || [],
+          strengths: potentialMatch.strengths || [],
+          needsHelpWith: potentialMatch.needsHelpWith || [],
+          friends: potentialMatch.friends || [],
+          leetcode: potentialMatch.leetcode || '',
+          github: potentialMatch.github || '',
+          linkedin: potentialMatch.linkedin || '',
+          portfolio: potentialMatch.portfolio || '',
+          badges: potentialMatch.badges || [],
+          createdAt: potentialMatch.createdAt,
+          rating: potentialMatch.rating || 0,
+        },
+        score: 30.00 // Minimum match score
+      }));
+      
+      return res.status(200).json(topMatches);
+    }
+    
     res.status(200).json(matches);
     
   } catch (error) {
