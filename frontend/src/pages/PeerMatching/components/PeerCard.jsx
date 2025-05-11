@@ -151,7 +151,7 @@ const PeerCard = ({ peer }) => {
   const isLoading = isSendingRequest || isRemovingFriend;
   
   // Format the score as a percentage for display
-  const matchPercentage = peer.score ? `${Math.round(peer.score * 100)}%` : '';
+  const matchPercentage = peer.score ? `${Math.round(peer.score)}%` : '';
   
   // Get initials for the avatar
   const getInitials = (name) => {
