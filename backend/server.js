@@ -36,6 +36,17 @@ app.use(cors({
   origin: process.env.FRONTEND_URL || ['https://new-peer-n9yh.vercel.app' , 'http://localhost:5173'],
   credentials: true
 }));
+
+app.use((req, res, next) => {
+  const contentType = req.headers['content-type'] || '';
+  if (contentType.startsWith('multipart/form-data')) {
+    
+    return next();
+  }
+  
+  
+  bodyParser.json()(req, res, next);
+});
 app.use(express.json({ limit: '500mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json({ limit: '500mb' }));

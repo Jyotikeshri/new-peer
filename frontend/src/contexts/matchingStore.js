@@ -73,7 +73,7 @@ const useMatchingStore = create((set, get) => ({
     try {
       set({ isLoading: true, error: null });
       
-      const response = await fetchWithAuth('https://new-peer-1.onrender.com/api/users/matches', {
+      const response = await fetchWithAuth('http://localhost:8000/api/users/matches', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ const useMatchingStore = create((set, get) => ({
         throw new Error('User not authenticated');
       }
       
-      const response = await fetchWithAuth('https://new-peer-1.onrender.com/api/users/add-friend', {
+      const response = await fetchWithAuth('http://localhost:8000/api/users/add-friend', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -190,7 +190,7 @@ const useMatchingStore = create((set, get) => ({
       set({ isLoading: true, error: null });
       
       // Note: You'd need to implement a disconnect/remove-friend API endpoint
-      const response = await fetchWithAuth('https://new-peer-1.onrender.com/api/users/remove-friend', {
+      const response = await fetchWithAuth('http://localhost:8000/api/users/remove-friend', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,4 @@
-// src/utils/apiClient.js - FIXED VERSION
+// src/utils/apiClient.js
 import useAuthStore from '../contexts/authStore';
 
 /**
@@ -16,37 +16,62 @@ export const fetchWithAuth = async (url, options = {}) => {
     const backupToken = localStorage.getItem('backup_token');
     const effectiveToken = token || backupToken;
     
-    // Prepare headers - IMPORTANT: Ensure content-type is set for POST requests
-    const headers = {
-        'Content-Type': options.method === 'POST' ? 'application/json' : 'application/x-www-form-urlencoded',
-        ...options.headers,
-    };
+    // Create a copy of the options to avoid mutating the original
+    const finalOptions = { ...options };
+    
+    // IMPORTANT: Set headers based on the content type
+    // Don't set Content-Type for FormData (let browser handle it)
+    const headers = {};
+    
+    // If the request has a body and it's FormData, don't set Content-Type
+    // Otherwise set the appropriate Content-Type based on the method and body
+    if (!(finalOptions.body instanceof FormData)) {
+        if (finalOptions.method === 'POST' || finalOptions.method === 'PUT' || finalOptions.method === 'PATCH') {
+            headers['Content-Type'] = 'application/json';
+        }
+    }
+    
+    // Add any custom headers
+    if (options.headers) {
+        Object.assign(headers, options.headers);
+    }
     
     // Add Authorization header if token exists
     if (effectiveToken) {
         headers['Authorization'] = `Bearer ${effectiveToken}`;
     }
     
-    // Log request details for debugging
-    // console.log(`[API] Request to ${url.split('/').pop()}`, {
-    //     method: options.method || 'GET',
-    //     hasToken: !!effectiveToken,
-    //     withCredentials: options.credentials === 'include'
-    // });
+    // Set the headers in finalOptions
+    finalOptions.headers = headers;
+    
+    // If the body is an object but not FormData, stringify it
+    if (finalOptions.body && typeof finalOptions.body === 'object' && !(finalOptions.body instanceof FormData)) {
+        finalOptions.body = JSON.stringify(finalOptions.body);
+    }
+    
+    // Ensure credentials are included for cross-origin requests
+    finalOptions.credentials = finalOptions.credentials || 'include';
     
     try {
-        // Ensure credentials are included for cross-origin requests
-        const response = await fetch(url, {
-            ...options,
-            headers,
-            credentials: options.credentials || 'include', // Default to include credentials
+        // Log request details for debugging (uncomment if needed)
+        /*
+        console.log(`[API] Request to ${url.split('/').pop()}`, {
+            method: finalOptions.method || 'GET',
+            hasToken: !!effectiveToken,
+            withCredentials: finalOptions.credentials === 'include',
+            isFormData: finalOptions.body instanceof FormData
         });
+        */
         
-        // Log response status
-        // console.log(`[API] Response from ${url.split('/').pop()}:`, {
-        //     status: response.status,
-        //     ok: response.ok
-        // });
+        const response = await fetch(url, finalOptions);
+        
+        // Log response status (uncomment if needed)
+        /*
+        console.log(`[API] Response from ${url.split('/').pop()}:`, {
+            status: response.status,
+            ok: response.ok
+        });
+        */
         
         // If response indicates auth problem, trigger auth check
         if (response.status === 401) {

@@ -47,17 +47,17 @@ const fileFilter = (req, file, cb) => {
 };
 
 // Create upload middleware
-const upload = multer({ 
+const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: { 
+  limits: {
     fileSize: 5 * 1024 * 1024, // 5MB limit
     files: 2 // Max 2 files (avatar and cover)
   }
 });
 
 // Middleware function for group file uploads
-export const groupUpload = upload.fields([
+export const uploadMiddleware = upload.fields([
   { name: 'avatar', maxCount: 1 },
   { name: 'coverImage', maxCount: 1 }
 ]);
@@ -74,4 +74,10 @@ export const deleteCloudinaryImage = async (publicId) => {
   }
 };
 
-export default { groupUpload, deleteCloudinaryImage };
+export const groupUpload = upload.fields([
+  { name: 'avatar', maxCount: 1 },
+  { name: 'coverImage', maxCount: 1 }
+]);
+
+// Export both functions (for backward compatibility)
+export default { uploadMiddleware, deleteCloudinaryImage , groupUpload };

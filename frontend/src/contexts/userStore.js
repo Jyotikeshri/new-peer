@@ -52,7 +52,7 @@ const useUserStore = create(
         try {
           set({ isLoading: true, error: null });
           const response = await fetchWithAuth(
-            `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/profile`,
+            `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/users/profile`,
             { credentials: 'include' }
           );
           if (!response.ok) throw new Error('Failed to fetch user data');
@@ -64,7 +64,7 @@ const useUserStore = create(
           
           // After fetching user, fetch detailed friends data
           const friendsResponse = await fetchWithAuth(
-            `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friends`,
+            `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/users/friends`,
             { credentials: 'include' }
           ).catch(err => {
             console.error('Error fetching friends:', err);
@@ -89,7 +89,7 @@ const useUserStore = create(
           set({ isLoading: true, error: null });
           const isFormData = profileData instanceof FormData;
           const response = await fetchWithAuth(
-            `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/profile`,
+            `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/users/profile`,
             {
               method: 'PUT',
               headers: isFormData ? undefined : { 'Content-Type': 'application/json' },
@@ -116,7 +116,7 @@ const useUserStore = create(
         try {
           set({ isLoading: true, error: null });
           const response = await fetchWithAuth(
-            `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friend-request`,
+            `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/users/friend-request`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -150,7 +150,7 @@ const useUserStore = create(
         try {
           set({ isLoading: true, error: null });
           const response = await fetchWithAuth(
-            `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friend-request/accept`,
+            `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/users/friend-request/accept`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -165,7 +165,7 @@ const useUserStore = create(
           
           // Get the accepted friend's details
           const friendResponse = await fetchWithAuth(
-            `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/${requesterId}`,
+            `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/users/${requesterId}`,
             { credentials: 'include' }
           );
           
@@ -213,7 +213,7 @@ const useUserStore = create(
         try {
           set({ isLoading: true, error: null });
           const response = await fetchWithAuth(
-            `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friend-request/reject`,
+            `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/users/friend-request/reject`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -249,7 +249,7 @@ const useUserStore = create(
           const { user } = get();
           if (!user) throw new Error('Authentication required');
           const response = await fetchWithAuth(
-            `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/add-friend`,
+            `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/users/add-friend`,
             {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
@@ -264,7 +264,7 @@ const useUserStore = create(
           
           // Get the new friend's details
           const friendResponse = await fetchWithAuth(
-            `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/${friendId}`,
+            `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/users/${friendId}`,
             { credentials: 'include' }
           );
           
@@ -299,7 +299,7 @@ const useUserStore = create(
           const { user } = get();
           if (!user) throw new Error('Authentication required');
           const response = await fetchWithAuth(
-            `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/remove-friend`,
+            `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/users/remove-friend`,
             {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
@@ -341,7 +341,7 @@ const useUserStore = create(
         try {
           set({ isLoading: true, error: null });
           const response = await fetchWithAuth(
-            `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/get-badge`,
+            `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/users/get-badge`,
             { credentials: 'include' }
           );
           if (!response.ok) {
@@ -366,7 +366,7 @@ const useUserStore = create(
         try {
           set({ isLoading: true, error: null });
           const response = await fetchWithAuth(
-            `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com/api'}/users/friends`,
+            `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/users/friends`,
             { credentials: 'include' }
           );
           if (!response.ok) {
