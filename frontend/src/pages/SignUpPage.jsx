@@ -186,11 +186,7 @@ const SignupPage = () => {
   }, [universities]);
 
   // Redirect if already authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/dashboard');
-    }
-  }, [isAuthenticated, navigate]);
+  
 
   // Set error from auth store
   useEffect(() => {
@@ -314,12 +310,19 @@ const SignupPage = () => {
         });
         
         // Navigate to dashboard - the useEffect will handle this
+        navigate('/dashboard');
       }
     } catch (err) {
       setError(err.message || 'Registration failed. Please try again.');
       console.error(err);
     }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleGoogleSignup = () => {
     // Implement Google OAuth signup
