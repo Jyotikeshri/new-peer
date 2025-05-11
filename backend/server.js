@@ -33,7 +33,7 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://new-peer-n9yh.vercel.app',
+  origin: process.env.FRONTEND_URL || ['https://new-peer-n9yh.vercel.app' , 'http://localhost:5173'],
   credentials: true
 }));
 app.use(express.json({ limit: '500mb' }));
