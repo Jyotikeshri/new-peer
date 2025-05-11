@@ -69,7 +69,7 @@ const useAuthStore = create(
           get().setToken(null);
           localStorage.removeItem('auth_token');
           
-          const response = await fetch('https://new-peer-1.onrender.com/auth/login', {
+          const response = await fetch('https://new-peer-1.onrender.com/api/auth/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ const useAuthStore = create(
           get().setToken(null);
           localStorage.removeItem('auth_token');
           
-          const response = await fetch('https://new-peer-1.onrender.com/auth/register', {
+          const response = await fetch('https://new-peer-1.onrender.com/api/auth/register', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -190,7 +190,7 @@ const useAuthStore = create(
 
           try {
             // Try to call logout API but don't fail if it doesn't work
-            await fetch('https://new-peer-1.onrender.com/auth/logout', {
+            await fetch('https://new-peer-1.onrender.com/api/auth/logout', {
               method: 'POST',
               credentials: 'include',
               headers: get().getAuthHeaders()
@@ -246,7 +246,7 @@ const useAuthStore = create(
             ...(currentToken ? { 'Authorization': `Bearer ${currentToken}` } : {})
           };
 
-          const response = await fetch('https://new-peer-1.onrender.com/users/profile', {
+          const response = await fetch('https://new-peer-1.onrender.com/api/users/profile', {
             credentials: 'include',
             headers: headers
           });
