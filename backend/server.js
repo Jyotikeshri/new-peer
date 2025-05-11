@@ -33,7 +33,7 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://new-peer-n9yh.vercel.app' ,
+  origin: process.env.FRONTEND_URL || 'https://new-peer.vercel.app' ,
   credentials: true
 }));
 
