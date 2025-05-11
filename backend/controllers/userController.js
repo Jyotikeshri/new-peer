@@ -321,8 +321,12 @@ export const findMatches = async (req, res) => {
         score += 0.5;
       }
 
+      // Calculate the normalized score and percentage
       const normalizedScore = Math.min(score, maxPossibleScore);
       const percentageScore = Math.min((normalizedScore / maxPossibleScore) * 100, 100);
+      
+      // Round to 1 decimal place to ensure consistency
+      const displayScore = Math.round(percentageScore * 10) / 10;
 
       if (score >= threshold) {
         matches.push({
@@ -343,7 +347,7 @@ export const findMatches = async (req, res) => {
             createdAt: potentialMatch.createdAt,
             rating: potentialMatch.rating,
           },
-          score: Math.round(percentageScore * 100) / 100
+          score: displayScore
         });
       }
     }
@@ -369,7 +373,7 @@ export const findMatches = async (req, res) => {
           createdAt: potentialMatch.createdAt,
           rating: potentialMatch.rating || 0,
         },
-        score: 30.00
+        score: 30.0 // Using a default score of 30.0 for fallback matches
       }));
 
       return res.status(200).json(topMatches);
@@ -382,7 +386,6 @@ export const findMatches = async (req, res) => {
     res.status(500).json({ message: error.message || 'Error finding matches' });
   }
 };
-
 // -------------------------
 // Helper: partial matcher
 function stringPartialMatch(textA, textB) {
