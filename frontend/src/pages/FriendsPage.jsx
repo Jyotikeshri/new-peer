@@ -66,7 +66,7 @@ const FriendsPage = () => {
 
       try {
         const response = await fetchWithAuth(
-          `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/users/friends`,
+          `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com'}/users/friends`,
           { credentials: 'include' }
         );
 
@@ -95,7 +95,7 @@ const FriendsPage = () => {
 
       try {
         const response = await fetchWithAuth(
-          `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/users/friend-requests`,
+          `${import.meta.env.VITE_API_BASE_URL || 'https://new-peer-1.onrender.com'}/users/friend-requests`,
           { credentials: 'include' }
         );
 

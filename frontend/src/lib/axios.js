@@ -3,7 +3,7 @@ import axios from "axios";
 import useAuthStore from "../contexts/authStore";
 
 // Get the base URL from environment variables with fallback
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://new-peer-1.onrender.com";
 
 // Create the axios instance with proper configuration
 export const axiosInstance = axios.create({
