@@ -285,8 +285,6 @@ export const findMatches = async (req, res) => {
       const userNeeds = (user.needsHelpWith || []).join(' ').toLowerCase();
       const matchNeeds = (potentialMatch.needsHelpWith || []).join(' ').toLowerCase();
 
-      // 1. Tensorflow semantic similarity calculations
-      // Each can contribute up to 1.0 to the score
       if (userBio && matchBio) {
         const bioSimilarity = await computeSimilarity(userBio, matchBio);
         score += bioSimilarity;
@@ -307,7 +305,6 @@ export const findMatches = async (req, res) => {
         score += matchStrengthsToUserNeedsSimilarity;
       }
 
-      // 2. Fallback: Direct text inclusion bonus (capped at 0.5 each)
       if (userStrengths && matchNeeds && (userStrengths.includes(matchNeeds) || matchNeeds.includes(userStrengths))) {
         score += 0.5;
       }
@@ -316,7 +313,6 @@ export const findMatches = async (req, res) => {
         score += 0.5;
       }
 
-      // 3. Mutual friends bonus
       const userFriendIds = user.friends.map(f => f._id.toString());
       const matchFriendIds = potentialMatch.friends.map(f => f._id.toString());
 
@@ -325,13 +321,9 @@ export const findMatches = async (req, res) => {
         score += 0.5;
       }
 
-      // 4. Normalize score as a percentage (0-100%)
-      // First cap the raw score at the maximum possible value
       const normalizedScore = Math.min(score, maxPossibleScore);
-      // Then convert to percentage (0-100%)
-      const percentageScore = (normalizedScore / maxPossibleScore) * 100;
-      
-      // 5. Only include if score meets the minimum threshold
+      const percentageScore = Math.min((normalizedScore / maxPossibleScore) * 100, 100);
+
       if (score >= threshold) {
         matches.push({
           user: {
@@ -351,22 +343,14 @@ export const findMatches = async (req, res) => {
             createdAt: potentialMatch.createdAt,
             rating: potentialMatch.rating,
           },
-          // Round to 2 decimal places for display
           score: Math.round(percentageScore * 100) / 100
         });
       }
     }
 
-    // Sort descending by best match first
     matches.sort((a, b) => b.score - a.score);
 
-    console.log(`[${requestId}] Found ${matches.length} suitable matches after scoring`);
-    
-    // If no matches were found but we have users in the system
     if (matches.length === 0 && allUsers.length > 0) {
-      console.log(`[${requestId}] No matches found that meet the threshold. Lowering threshold to include more results.`);
-      
-      // Consider returning the top 3 matches regardless of threshold
       const topMatches = allUsers.slice(0, 3).map(potentialMatch => ({
         user: {
           _id: potentialMatch._id,
@@ -385,14 +369,14 @@ export const findMatches = async (req, res) => {
           createdAt: potentialMatch.createdAt,
           rating: potentialMatch.rating || 0,
         },
-        score: 30.00 // Minimum match score
+        score: 30.00
       }));
-      
+
       return res.status(200).json(topMatches);
     }
     
     res.status(200).json(matches);
-    
+
   } catch (error) {
     console.error(`[${requestId}] Error in findMatches:`, error);
     res.status(500).json({ message: error.message || 'Error finding matches' });
