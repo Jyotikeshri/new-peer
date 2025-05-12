@@ -148,7 +148,7 @@ export const updateUserProfile = async (req, res) => {
       // Continue with the original values if parsing fails
     }
 
-    const { bio, github, linkedin, leetcode, portfolio, isOnboarded } = req.body;
+    const { bio, github, linkedin, leetcode, portfolio, isOnboarded , username } = req.body;
 
     // Check if avatar file is uploaded
     let avatar;
@@ -171,6 +171,8 @@ export const updateUserProfile = async (req, res) => {
     if (linkedin !== undefined) updatedUserData.linkedin = linkedin;
     if (leetcode !== undefined) updatedUserData.leetcode = leetcode;
     if (portfolio !== undefined) updatedUserData.portfolio = portfolio;
+    if (username !== undefined) updatedUserData.username = username;
+
 
     if (typeof isOnboarded !== 'undefined') {
       updatedUserData.isOnboarded = (isOnboarded === 'true' || isOnboarded === true);
